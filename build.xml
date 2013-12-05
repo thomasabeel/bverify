@@ -138,14 +138,7 @@
             <classpath path="${toString:build.classpath}" >
             </classpath>
         </javac>
- <copy todir="${build}/" >
-        <fileset dir="resources" >
-
-                <include name="*.txt" />
-
-                <include name="*.fasta" />
-            </fileset>
-        </copy>
+ 	  
         <jar
             basedir="${build}"
             destfile="${dist}/${jar}" >
