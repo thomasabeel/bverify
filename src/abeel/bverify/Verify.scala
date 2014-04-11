@@ -9,7 +9,7 @@ import atk.io.IOTools
 
 object Verify extends Tool {
 
-  case class Config(val recursive: Boolean = false, val pattern: Seq[String] = Seq(".*.log"), input: File = new File("."), output: File = null, clean: Boolean = false)
+  case class Config(val recursive: Boolean = false, val pattern: Seq[String] = Seq(), input: File = new File("."), output: File = null, clean: Boolean = false)
 
   def main(args: Array[String]): Unit = {
 
@@ -30,7 +30,8 @@ object Verify extends Tool {
 
       pw.println(generatorInfo)
       pw.println("# Pattern\tSuccess\tFailure")
-      for (pattern <- config.pattern) {
+      val patterns=if(config.pattern.size>0)config.pattern.toList else List(".*.log")
+      for (pattern <- patterns) {
         val files = if(config.recursive) IOTools.recurse(config.input, new PatternFileFilter(pattern))   else config.input.listFiles(new PatternFileFilter(pattern))
 
         var good = 0
@@ -51,7 +52,8 @@ object Verify extends Tool {
 
         })
         pw.println(pattern+"\t"+good+"\t"+fail)
-        pw.println("# Failed runs: \n# "+failureList.mkString("\n# "))
+        if(failureList.size>0)
+        	pw.println("\t Failed runs: \n\t\t"+failureList.mkString("\n\t\t"))
 //        pw.println("# " + good + "\t runs succeeded")
 //        pw.println("# " + fail + "\t runs failed")
       }
